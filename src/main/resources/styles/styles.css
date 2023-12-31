@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url('images/background.png');
+    -fx-background-image: url('@../../../images/background.png');
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;
@@ -8,11 +8,19 @@
 .menu-button {
     -fx-font-size: 16px;
     -fx-background-color: #ffffff;
-    -fx-background-radius: 5;
+    -fx-background-radius: 15; /* Zaokrąglenie rogów */
     -fx-text-fill: #000000;
-    -fx-padding: 10;
+    -fx-padding: 10 20; /* Góra/dół, lewo/prawo */
+    -fx-min-width: 200px; /* Minimalna szerokość */
+    -fx-min-height: 50px; /* Minimalna wysokość */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 5); /* Cień */
 }
 
 .menu-button:hover {
-    -fx-background-color: #dddddd;
+    -fx-background-color: #f2f2f2; /* Kolor tła przy najechaniu */
+}
+
+.title-text {
+    -fx-fill: white; /* Dla tekstu SVG używamy właściwości -fx-fill */
+    -fx-text-fill: white; /* Dla tekstu standardowego używamy właściwości -fx-text-fill */
 }

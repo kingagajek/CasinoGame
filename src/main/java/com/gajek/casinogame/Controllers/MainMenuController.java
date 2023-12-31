@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainMenuController {
+public class MainMenuController implements IStageAwareController{
 
     private Stage mainStage;
     @FXML
@@ -32,5 +32,10 @@ public class MainMenuController {
     private void playSlots() {
         // TODO: Implement the action when the Play Slots button is clicked
         System.out.println("Play Slots button clicked");
+    }
+
+    @Override
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
     }
 }

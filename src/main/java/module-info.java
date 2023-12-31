@@ -5,4 +5,6 @@ module com.gajek.casinogame {
 
     opens com.gajek.casinogame to javafx.fxml;
     exports com.gajek.casinogame;
+    exports com.gajek.casinogame.Controllers;
+    opens com.gajek.casinogame.Controllers to javafx.fxml;
 }

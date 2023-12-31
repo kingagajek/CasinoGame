@@ -1,4 +1,4 @@
-package com.gajek.casinogame;
+package com.gajek.casinogame.Controllers;
 
 import javafx.stage.Stage;
 

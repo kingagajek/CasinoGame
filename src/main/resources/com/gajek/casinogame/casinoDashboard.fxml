@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.gajek.casinogame.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gajek.casinogame.Controllers.MainMenuController" stylesheets="@../../../styles/styles.css">
+    <VBox fx:id="vboxContainer" alignment="CENTER" spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <Text text="Welcome to the Casino!" styleClass="title-text" style="-fx-font-size: 24px;" />
+        <Button text="Play Roulette" onAction="#playRoulette" styleClass="menu-button" />
+        <Button text="Play Blackjack" onAction="#playBlackjack" styleClass="menu-button" />
+        <Button text="Play Slots" onAction="#playSlots" styleClass="menu-button" />
+    </VBox>
+</AnchorPane>
+

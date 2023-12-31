@@ -1,2 +1,4 @@
-package com.gajek.casinogame.Controllers;public class SlotsGameController {
+package com.gajek.casinogame.Controllers;
+
+public class SlotsGameController {
 }
