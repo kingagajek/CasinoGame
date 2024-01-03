@@ -21,7 +21,6 @@ public class MainMenuController implements IStageAwareController{
         }
     }
 
-
     @FXML
     private void playBlackjack() {
         // TODO: Implement the action when the Play Blackjack button is clicked

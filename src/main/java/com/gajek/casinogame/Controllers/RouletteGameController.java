@@ -1,28 +1,28 @@
 package com.gajek.casinogame.Controllers;
 
+import com.gajek.casinogame.Observer.BalanceObserver;
+import com.gajek.casinogame.Observer.BetsObserver;
+import com.gajek.casinogame.Observer.RouletteGame;
 import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class RouletteGameController {
 
-    @FXML
-    private Button spinButton;
     @FXML
     private Button betRedButton;
     @FXML
@@ -30,13 +30,7 @@ public class RouletteGameController {
     @FXML
     private Button betGreenButton;
     @FXML
-    private Label resultLabel;
-
-    // Atrybuty do przechowywania informacji o zakładach
-    private boolean betOnRed = false;
-    private boolean betOnBlack = false;
-    private boolean betOnGreen = false;
-
+    private Button returnToMenuButton;
     @FXML
     private Circle ball;
     @FXML
@@ -45,102 +39,85 @@ public class RouletteGameController {
     private ListView<Integer> numberSelection;
     @FXML
     private TextField betAmount;
-    private final Map<Integer, Double> numberBets = new HashMap<>();
-    private double totalBetAmount = 0;
-    private double colorBetAmount = 0;
-    // Add a balance property
-    private double balance = 1000; // Starting balance
-
     @FXML
     private Label balanceLabel; // Label to display the balance
-
     @FXML
     private Label currentBetsLabel; // Label to display current bets
+    @FXML
+    private Label resultLabel; // Label to display current bets
 
-    // Metoda do aktualizowania wyświetlania aktualnych zakładów
-    private void updateCurrentBetsDisplay() {
-        System.out.println("Aktualizacja wyświetlania zakładów"); // Debug
-        StringBuilder betsDisplay = new StringBuilder("Aktualne zakłady: ");
+    private RouletteGame gameModel = new RouletteGame();
+    private BalanceObserver balanceObserver;
+    private BetsObserver betsObserver;
 
-        // Debug: Sprawdź, czy etykieta została zainicjalizowana
-        if (currentBetsLabel == null) {
-            System.out.println("currentBetsLabel jest null!");
-            return;
-        }
-
-        if (betOnRed) betsDisplay.append("Czerwony | ");
-        if (betOnBlack) betsDisplay.append("Czarny | ");
-        if (betOnGreen) betsDisplay.append("Zielony | ");
-        numberBets.forEach((number, amount) -> betsDisplay.append("Nr ").append(number).append(": ").append(amount).append(" | "));
-
-        // Debug: Wyświetl zawartość betsDisplay przed ustawieniem tekstu
-        System.out.println(betsDisplay.toString());
-
-        currentBetsLabel.setText(betsDisplay.toString());
-    }
-
-    private void updateBalanceDisplay() {
-        balanceLabel.setText(String.format("Balance: %.2f", balance));
-    }
     public void initialize() {
-        // Dodaj numery do ListView
         for (int i = 0; i <= 36; i++) {
             numberSelection.getItems().add(i);
         }
 
         // Ustaw tryb wielokrotnego wyboru
         numberSelection.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        updateBalanceDisplay();
+
+        gameModel.setBalance(1000);
+        balanceObserver = new BalanceObserver(balanceLabel);
+        gameModel.attach(balanceObserver);
+
+        // Utworzenie obserwatora zakładów i jego dołączenie
+        betsObserver = new BetsObserver(currentBetsLabel);
+        gameModel.attach(betsObserver);
     }
 
+    @FXML
+    private void returnToMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/gajek/casinogame/casinoDashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) returnToMenuButton.getScene().getWindow();
+            Scene scene = new Scene(root, 800, 800);
+            stage.setScene(scene);
+            stage.show();
+
+            // Ponowne ustawienie mainStage w kontrolerze menu głównego
+            MainMenuController controller = loader.getController();
+            if (controller instanceof IStageAwareController) {
+                ((IStageAwareController) controller).setMainStage(stage);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void confirmBets() {
-        // Wyczyść poprzednie zakłady
-        numberBets.clear();
-        totalBetAmount = 0;
-        colorBetAmount = 0;
-        double betValue;
+        List<Integer> selectedNumbers = numberSelection.getSelectionModel().getSelectedItems();
+        double betValue = 0;
 
-        if (betAmount.getText().isEmpty() && !betOnRed && !betOnBlack && !betOnGreen) {
+        if (betAmount.getText().isEmpty() && !gameModel.getBetOnRed() && !gameModel.getBetOnBlack() && !gameModel.getBetOnGreen()) {
             resultLabel.setText("Proszę wpisać kwotę zakładu lub wybrać kolor.");
             return;
         }
-        // Pobierz wybrane numery i postawione kwoty
-        List<Integer> selectedNumbers = numberSelection.getSelectionModel().getSelectedItems();
+
         try {
             betValue = Double.parseDouble(betAmount.getText());
-            for (int number : selectedNumbers) {
-                numberBets.put(number, betValue);
-                totalBetAmount += betValue;
-            }
-            if (betOnRed || betOnBlack || betOnGreen) {
-                totalBetAmount += betValue;
-                colorBetAmount = betValue;
-            }
-            resultLabel.setText("Zakłady potwierdzone. Łączna stawka: " + totalBetAmount);
         } catch (NumberFormatException e) {
             resultLabel.setText("Proszę wpisać poprawną kwotę zakładu.");
+            return;
         }
-        // Display current bets
-        updateCurrentBetsDisplay();
 
-        // Check if balance has run out
-        if (balance <= 0) {
+        gameModel.updateBets(selectedNumbers, betValue, gameModel.getBetOnRed(), gameModel.getBetOnBlack(), gameModel.getBetOnGreen());
+
+
+        if (gameModel.getBalance() <= 0) {
             resultLabel.setText("Game Over. You've run out of funds!");
-            // Disable betting buttons or take other appropriate actions
         }
-
-        Platform.runLater(() -> {
-            updateCurrentBetsDisplay();
-        });
 
     }
 
     @FXML
     private void spinRoulette() {
         // Tworzymy ścieżkę animacji wokół koła ruletki
-        if (betAmount.getText().isEmpty() && !betOnRed && !betOnBlack && !betOnGreen) {
+        if (betAmount.getText().isEmpty() && !gameModel.getBetOnRed() && !gameModel.getBetOnBlack() && !gameModel.getBetOnGreen()) {
             resultLabel.setText("Proszę najpierw postawić zakład.");
             return;
         }
@@ -172,11 +149,8 @@ public class RouletteGameController {
         // Ustawiamy akcję, która zostanie wykonana po zakończeniu animacji
         transition.setOnFinished(event -> {
             System.out.println("Animacja została zakończona");
-            // Tutaj możesz umieścić dodatkową logikę, na przykład wyświetlić wynik gry
-            Platform.runLater(() -> {
-                displayResult(spinWheel());
-                updateBalanceDisplay();
-            });
+            int result = spinWheel();
+            displayResult(result);
         });
 
         transition.play();
@@ -186,42 +160,33 @@ public class RouletteGameController {
     // Metody wywoływane po naciśnięciu przycisków zakładów
     public void betRed(ActionEvent actionEvent) {
         resultLabel.setText("Bet placed on Red");
-        if (betOnRed)
-        {
-            betOnRed = false;
+        if (gameModel.getBetOnRed()) {
+            gameModel.setBetOnColor("Red", false);
             betRedButton.getStyleClass().remove("active");
-        }
-        else
-        {
-            betOnRed = true;
+        } else {
+            gameModel.setBetOnColor("Red", true);
             betRedButton.getStyleClass().add("active");
         }
     }
 
     public void betBlack(ActionEvent actionEvent) {
         resultLabel.setText("Bet placed on Black");
-        if (betOnBlack)
-        {
-            betOnBlack = false;
+        if (gameModel.getBetOnBlack()) {
+            gameModel.setBetOnColor("Black", false);
             betBlackButton.getStyleClass().remove("active");
-        }
-        else
-        {
-            betOnBlack = true;
+        } else {
+            gameModel.setBetOnColor("Black", true);
             betBlackButton.getStyleClass().add("active");
         }
     }
 
     public void betGreen(ActionEvent actionEvent) {
         resultLabel.setText("Bet placed on Green");
-        if (betOnGreen)
-        {
-            betOnGreen = false;
+        if (gameModel.getBetOnGreen()) {
+            gameModel.setBetOnColor("Green", false);
             betGreenButton.getStyleClass().remove("active");
-        }
-        else
-        {
-            betOnGreen = true;
+        } else {
+            gameModel.setBetOnColor("Green", true);
             betGreenButton.getStyleClass().add("active");
         }
     }
@@ -229,73 +194,42 @@ public class RouletteGameController {
     // Pomocnicza metoda do symulacji obrotu koła ruletki
     private int spinWheel() {
         Random random = new Random();
-        return random.nextInt(37); // Ruletka europejska ma liczby od 0 do 36
+        return random.nextInt(37);
     }
 
-    // Pomocnicza metoda do wyświetlania wyniku
     private void displayResult(int number) {
-        String color;
-        if (number == 0) {
-            color = "Green";
-        } else if (number % 2 == 0) {
-            color = "Black";
-        } else {
-            color = "Red";
-        }
+        // Pobierz kolor dla wylosowanego numeru
+        StringBuilder details = new StringBuilder();
+        String color = gameModel.getColorForNumber(number);
+        boolean win = gameModel.checkWin(number, color);
 
-        boolean win = false;
-        double payout = 0;
-        String betDetails = "";
-        balance -= totalBetAmount; // Odejmij stawkę z balansu
-
-        // Sprawdź zakłady na liczby
-        if (numberBets.containsKey(number)) {
-            win = true;
-            payout += numberBets.get(number) * 35; // Wypłata 35 do 1 za trafienie numeru
-            betDetails += "Number " + number + " hit! Bet payout: " + (numberBets.get(number) * 35) + ". ";
-        }
-
-        // Sprawdź zakłady na kolory
-        if (betOnRed && "Red".equals(color)) {
-            win = true;
-            payout += colorBetAmount * 2; // Wypłata 1 do 1 za trafienie koloru
-            betDetails += "Red color hit! ";
-        } else if (betOnBlack && "Black".equals(color)) {
-            win = true;
-            payout += colorBetAmount * 2; // Wypłata 1 do 1 za trafienie koloru
-            betDetails += "Black color hit! ";
-        } else if (betOnGreen && "Green".equals(color)) {
-            win = true;
-            payout += colorBetAmount * 35; // Wypłata 35 do 1 za trafienie zielonego (zerowego)
-            betDetails += "Green color hit! ";
-        }
-
-        // Wyświetl wynik
+        // Przetwórz wynik w modelu gry, który zaktualizuje stan i powiadomi obserwatorów
+        gameModel.processResult(number, color);
         if (win) {
-            balance += payout;
-            resultLabel.setText("Win! Ball landed on " + number + " - " + color + ". " + betDetails + "Total payout: " + payout + ".");
+            // Append details of winning bets
+            details.append(String.format("Number %d - %s hit! Payout: %.2f", number, color, gameModel.calculatePayout(number, color)));
         } else {
-            resultLabel.setText("Lose. Ball landed on " + number + " - " + color + ".");
+            // Append message for no wins
+            details.append(String.format("Number %d - %s. No win this time.", number, color));
         }
-
-        // Resetowanie zakładów i aktualizacja wyświetlania balansu
-        resetBets();
-        updateBalanceDisplay();
+        resultLabel.setText(details.toString());
+        gameModel.resetBets();
+        betRedButton.getStyleClass().remove("active");
+        betBlackButton.getStyleClass().remove("active");
+        betGreenButton.getStyleClass().remove("active");
     }
 
 
     // Pomocnicza metoda do resetowania zakładów
     @FXML
     private void resetBets() {
-        betOnRed = false;
-        betOnBlack = false;
-        betOnGreen = false;
-        totalBetAmount = 0;
-        numberBets.clear();
+        gameModel.setBetOnColor("Red", false);
+        gameModel.setBetOnColor("Black", false);
+        gameModel.setBetOnColor("Green", false);
         betAmount.setText("");
-        numberSelection.getSelectionModel().clearSelection();
         currentBetsLabel.setText("No bets placed.");
-        updateCurrentBetsDisplay();
-        currentBetsLabel.setText("");
+        numberSelection.getSelectionModel().clearSelection();
+        gameModel.resetBets();
     }
 }
+
