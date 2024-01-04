@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gajek.casinogame.SlotsGame"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane fx:id="slotsGamePane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gajek.casinogame.Controllers.SlotsGameController" stylesheets="@../../../styles/SlotsGameStyles.css">
+    <VBox styleClass="game-background" spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <Label fx:id="balanceLabel" text="Balance: 1000" styleClass="balance-label" />
+        <HBox fx:id="reelsContainer" spacing="10" alignment="CENTER">
+            <!-- Miejsce na obrazki bębnów slotowych -->
+            <ImageView fx:id="reel1View" fitWidth="100" fitHeight="100" preserveRatio="true" />
+            <ImageView fx:id="reel2View" fitWidth="100" fitHeight="100" preserveRatio="true" />
+            <ImageView fx:id="reel3View" fitWidth="100" fitHeight="100" preserveRatio="true" />
 
+        </HBox>
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="spinButton" text="Spin" onAction="#spin" styleClass="spin-button"/>
+            <Button fx:id="betMaxButton" text="Bet Max" onAction="#betMax" styleClass="bet-button"/>
+            <TextField fx:id="betAmount" promptText="Bet Amount" styleClass="bet-text-field"/>
+        </HBox>
+        <Button fx:id="returnToMenuButton" text="Return to Menu" onAction="#returnToMenu" styleClass="menu-button"/>
+    </VBox>
 </AnchorPane>

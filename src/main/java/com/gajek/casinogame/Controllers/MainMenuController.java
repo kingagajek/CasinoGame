@@ -2,6 +2,7 @@ package com.gajek.casinogame.Controllers;
 
 import com.gajek.casinogame.IGameFactory;
 import com.gajek.casinogame.RouletteGameFactory;
+import com.gajek.casinogame.SlotsGameFactory;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -29,8 +30,12 @@ public class MainMenuController implements IStageAwareController{
 
     @FXML
     private void playSlots() {
-        // TODO: Implement the action when the Play Slots button is clicked
-        System.out.println("Play Slots button clicked");
+        IGameFactory factory = new SlotsGameFactory();
+        Scene slotsScene = factory.createGameScene();
+        if (slotsScene != null && mainStage != null) {
+            mainStage.setScene(slotsScene);
+            mainStage.show();
+        }
     }
 
     @Override

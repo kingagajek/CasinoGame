@@ -1,0 +1,43 @@
+.game-background {
+    -fx-background-color: #3c3f41; /* Tło dla całego okna gry */
+    -fx-padding: 20px;
+}
+
+
+.menu-button, .bet-button, .spin-button {
+    -fx-min-width: 100px;
+    -fx-background-color: #7cafc2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 15px 30px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.menu-button:hover, .bet-button:hover, .spin-button:hover {
+    -fx-background-color: #5e8d93;
+}
+
+.spin-button {
+    -fx-font-size: 16px;
+    -fx-background-color: #4CAF50; /* Kolor przycisku Spin */
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 15px;
+}
+
+.balance-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #ffffff; /* Biały tekst */
+    -fx-font-weight: bold;
+}
+
+.bet-text-field {
+    -fx-min-width: 150px;
+    -fx-prompt-text-fill: #ffffff; /* Kolor tekstu podpowiedzi */
+    -fx-background-color: #34495e; /* Kolor tła */
+    -fx-text-fill: #ffffff; /* Kolor tekstu */
+    -fx-border-color: #34495e;
+    -fx-border-width: 2px;
+    -fx-padding: 5px;
+}
