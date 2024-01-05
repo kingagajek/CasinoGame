@@ -15,4 +15,3 @@ public class Reel {
         return strategy.spin();
     }
 }
-

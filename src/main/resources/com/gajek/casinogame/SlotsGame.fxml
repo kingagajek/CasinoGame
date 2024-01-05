@@ -12,10 +12,11 @@
             <ImageView fx:id="reel1View" fitWidth="100" fitHeight="100" preserveRatio="true" />
             <ImageView fx:id="reel2View" fitWidth="100" fitHeight="100" preserveRatio="true" />
             <ImageView fx:id="reel3View" fitWidth="100" fitHeight="100" preserveRatio="true" />
-
         </HBox>
+        <Label fx:id="payoutLabel" text="Payout: 0" styleClass="payout-label" />
+        <Label fx:id="messageLabel" text="" styleClass="message-label" />
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="spinButton" text="Spin" onAction="#spin" styleClass="spin-button"/>
+            <Button fx:id="spinButton" text="Spin" onAction="#spinSlots" styleClass="spin-button"/>
             <Button fx:id="betMaxButton" text="Bet Max" onAction="#betMax" styleClass="bet-button"/>
             <TextField fx:id="betAmount" promptText="Bet Amount" styleClass="bet-text-field"/>
         </HBox>

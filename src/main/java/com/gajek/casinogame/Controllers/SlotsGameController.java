@@ -1,19 +1,21 @@
 package com.gajek.casinogame.Controllers;
 
+import com.gajek.casinogame.Strategy.PayoutStrategy;
 import com.gajek.casinogame.Strategy.SlotMachine;
+import com.gajek.casinogame.Strategy.StandardPayoutStrategy;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SlotsGameController {
 
@@ -21,17 +23,21 @@ public class SlotsGameController {
     private Button returnToMenuButton;
     @FXML
     private TextField betAmount;
-
-    private int balance; // saldo użytkownika
-    private int bet; // aktualny zakład użytkownika
-    private SlotMachine slotMachine;
-
     @FXML
     private ImageView reel1View;
     @FXML
     private ImageView reel2View;
     @FXML
     private ImageView reel3View;
+    @FXML
+    private Label balanceLabel;
+    @FXML
+    private Label payoutLabel;
+    @FXML
+    private Label messageLabel;
+    private PayoutStrategy payoutStrategy = new StandardPayoutStrategy();
+    private int bet;
+    private SlotMachine slotMachine;
 
     @FXML
     private void returnToMenu() {
@@ -54,13 +60,23 @@ public class SlotsGameController {
         }
     }
 
+    private void showMessage(String message) {
+        messageLabel.setText(message);
+    }
 
-    @FXML
-    public void spin() {
-        // Wywołanie metody spinReels() na obiekcie slotMachine
-        List<Image> spinResults = slotMachine.spinReels();
+    private void clearMessage() {
+        messageLabel.setText("");
+    }
 
-        // Aktualizacja ImageView w interfejsie użytkownika za pomocą wyników spinu
+    private void updateBalanceDisplay() {
+        balanceLabel.setText("Balance: " + slotMachine.getBalance());
+    }
+
+    private void updatePayoutDisplay(int payout) {
+        payoutLabel.setText("Payout: " + payout);
+    }
+
+    private void updateReelViews(List<Image> spinResults) {
         reel1View.setImage(spinResults.get(0));
         reel2View.setImage(spinResults.get(1));
         reel3View.setImage(spinResults.get(2));
@@ -68,59 +84,48 @@ public class SlotsGameController {
 
     @FXML
     private void betMax() {
-        // Ustaw maksymalny możliwy zakład
-        // To może być np. maksymalna wartość, jaką użytkownik może postawić w zależności od salda
-        int maxBet = calculateMaxBet();
+        int maxBet = slotMachine.calculateMaxBet();
         betAmount.setText(String.valueOf(maxBet));
-        bet = maxBet;
-        // Możesz również automatycznie uruchomić spin po ustawieniu maksymalnego zakładu
-        // spinSlots();
     }
 
-    // Metoda do obliczania maksymalnego zakładu
-    private int calculateMaxBet() {
-        // Tu zdefiniuj logikę obliczania maksymalnego zakładu
-        return Math.min(balance, 100);
+    @FXML
+    private void spinSlots() {
+        try {
+            int betValue = Integer.parseInt(betAmount.getText());
+            if (slotMachine.validateAndSetBet(betValue)) {
+                bet = betValue;
+                int payout = slotMachine.spinAndCalculatePayout(bet);
+                updateReelViews(slotMachine.getLastSpinResults());
+                updateBalanceDisplay();
+                updatePayoutDisplay(payout);
+                clearMessage();
+            } else {
+                showMessage("Niepoprawna kwota zakładu lub niewystarczające środki");
+            }
+        } catch (NumberFormatException e) {
+            showMessage("Niepoprawna kwota zakładu");
+        }
     }
 
     @FXML
     public void initialize() {
-        // Inicjalizacja stanu gry, ustaw saldo początkowe, itp.
-        balance = 1000;
-        List<Image> reel1Symbols = Arrays.asList(
-                new Image(getClass().getResource("/images/seven-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bar-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bell-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/cherries-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/lemon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/watermelon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/star-slot-game.png").toExternalForm())
-        );
+        List<Map<Image, Integer>> symbolsForReels = new ArrayList<>();
 
-        List<Image> reel2Symbols = Arrays.asList(
-                new Image(getClass().getResource("/images/seven-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bar-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bell-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/cherries-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/lemon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/watermelon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/star-slot-game.png").toExternalForm())
-        );
+        Map<Image, Integer> weightedSymbols = new HashMap<>();
+        weightedSymbols.put(new Image(getClass().getResource("/images/seven.png").toExternalForm()), 1); // Bardzo rzadkie
+        weightedSymbols.put(new Image(getClass().getResource("/images/cherry.png").toExternalForm()), 10); // Bardzo częste
+        weightedSymbols.put(new Image(getClass().getResource("/images/lemon.png").toExternalForm()), 8); // Częste
+        weightedSymbols.put(new Image(getClass().getResource("/images/bar.png").toExternalForm()), 2); // Rzadkie
+        weightedSymbols.put(new Image(getClass().getResource("/images/bell.png").toExternalForm()), 5); // Średnio częste
+        weightedSymbols.put(new Image(getClass().getResource("/images/star.png").toExternalForm()), 3); // Dość rzadkie
+        weightedSymbols.put(new Image(getClass().getResource("/images/watermelon.png").toExternalForm()), 7); // Częste
 
-        List<Image> reel3Symbols = Arrays.asList(
-                new Image(getClass().getResource("/images/seven-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bar-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/bell-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/cherries-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/lemon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/watermelon-slot-game.png").toExternalForm()),
-                new Image(getClass().getResource("/images/star-slot-game.png").toExternalForm())
-        );
-
-        // Tutaj tworzymy listę list obrazów, gdzie każda lista reprezentuje bęben
-        List<List<Image>> symbolsForReels = Arrays.asList(reel1Symbols, reel2Symbols, reel3Symbols);
+        symbolsForReels.add(weightedSymbols); // Bęben 1
+        symbolsForReels.add(weightedSymbols); // Bęben 2
+        symbolsForReels.add(weightedSymbols);
 
         // Utworzenie maszyny slotowej z załadowanymi symbolami
-        slotMachine = new SlotMachine(symbolsForReels);
+        slotMachine = new SlotMachine(symbolsForReels, payoutStrategy);
+        updateBalanceDisplay();
     }
 }

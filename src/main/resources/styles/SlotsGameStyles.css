@@ -41,3 +41,17 @@
     -fx-border-width: 2px;
     -fx-padding: 5px;
 }
+
+.payout-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff; /* Biały tekst */
+    -fx-font-weight: bold;
+    -fx-background-color: #3c3f41; /* Tło dopasowane do tła gry */
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+.message-label {
+    -fx-text-fill: red;
+    -fx-font-size: 14px;
+}

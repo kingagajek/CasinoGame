@@ -1,23 +1,55 @@
 package com.gajek.casinogame.Strategy;
 
 import javafx.scene.image.Image;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RandomReelStrategy implements ReelStrategy {
-    private final List<Image> symbols;
+    private final List<Image> weightedSymbolPool;
     private final Random randomGenerator = new Random();
+    private Set<Image> alreadySpunSymbols = new HashSet<>();
 
-    public RandomReelStrategy(List<Image> symbols) {
-        this.symbols = symbols;
+    public RandomReelStrategy(Map<Image, Integer> symbolWeights) {
+        this.weightedSymbolPool = createWeightedSymbolPool(symbolWeights);
     }
 
-    @Override
+    private List<Image> createWeightedSymbolPool(Map<Image, Integer> symbolWeights) {
+        List<Image> symbolPool = new ArrayList<>();
+        for (Map.Entry<Image, Integer> entry : symbolWeights.entrySet()) {
+            Image symbol = entry.getKey();
+            int weight = entry.getValue();
+            for (int i = 0; i < weight; i++) {
+                symbolPool.add(symbol);
+            }
+        }
+        return symbolPool;
+    }
+
     public Image spin() {
-        // Losowe wybranie indeksu z listy dostępnych symboli
-        int randomIndex = randomGenerator.nextInt(symbols.size());
-        // Zwrócenie wybranego symbolu
-        return symbols.get(randomIndex);
+        int randomIndex = randomGenerator.nextInt(weightedSymbolPool.size());
+        Image chosenSymbol = weightedSymbolPool.get(randomIndex);
+
+        alreadySpunSymbols.clear();
+        if (alreadySpunSymbols.contains(chosenSymbol)) {
+            // Dostosuj indeks losowy na podstawie poprzednich losowań
+            randomIndex = adjustRandomIndexBasedOnPreviousSpins(randomIndex, chosenSymbol, weightedSymbolPool, alreadySpunSymbols);
+            chosenSymbol = weightedSymbolPool.get(randomIndex);
+        }
+
+        alreadySpunSymbols.add(chosenSymbol);
+        return chosenSymbol;
+    }
+
+    private int adjustRandomIndexBasedOnPreviousSpins(int currentIndex, Image chosenSymbol, List<Image> weightedSymbolPool, Set<Image> alreadySpunSymbols) {
+        if (alreadySpunSymbols.contains(chosenSymbol)) {
+            List<Image> availableSymbols = new ArrayList<>(weightedSymbolPool);
+            availableSymbols.removeAll(alreadySpunSymbols);
+            if (!availableSymbols.isEmpty()) {
+                int newRandomIndex = randomGenerator.nextInt(availableSymbols.size());
+                return weightedSymbolPool.indexOf(availableSymbols.get(newRandomIndex));
+            }
+        }
+        return currentIndex;
     }
 }
