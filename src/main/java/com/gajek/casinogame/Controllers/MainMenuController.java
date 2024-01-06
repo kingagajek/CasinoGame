@@ -1,5 +1,6 @@
 package com.gajek.casinogame.Controllers;
 
+import com.gajek.casinogame.BlackjackGameFactory;
 import com.gajek.casinogame.IGameFactory;
 import com.gajek.casinogame.RouletteGameFactory;
 import com.gajek.casinogame.SlotsGameFactory;
@@ -24,8 +25,12 @@ public class MainMenuController implements IStageAwareController{
 
     @FXML
     private void playBlackjack() {
-        // TODO: Implement the action when the Play Blackjack button is clicked
-        System.out.println("Play Blackjack button clicked");
+        IGameFactory factory = new BlackjackGameFactory();
+        Scene slotsScene = factory.createGameScene();
+        if (slotsScene != null && mainStage != null) {
+            mainStage.setScene(slotsScene);
+            mainStage.show();
+        }
     }
 
     @FXML

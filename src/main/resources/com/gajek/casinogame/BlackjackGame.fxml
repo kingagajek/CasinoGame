@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gajek.casinogame.BlackjackGame"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import javafx.scene.control.TextField?>
+<AnchorPane fx:id="blackjackGamePane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gajek.casinogame.Controllers.BlackjackGameController" stylesheets="@../../../styles/BlackjackGameStyles.css">
+    <HBox styleClass="game-background" spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <!-- Główny obszar gry -->
+        <Button fx:id="returnToMenuButton" text="Return to Menu" onAction="#returnToMenu" />
+        <VBox alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
+            <Label fx:id="balanceLabel" text="Balance: 1000" styleClass="balance-label" />
+            <VBox fx:id="playerBox" spacing="5">
+                <Label fx:id="playerHandValueLabel" text="Player Hand Value: 0" styleClass="value-label"/>
+                <HBox fx:id="playerHand" spacing="5">
+                    <!-- Przykładowe karty gracza -->
+<!--                    <ImageView fx:id="playerCard1" />-->
+<!--                    <ImageView fx:id="playerCard2" />-->
+                </HBox>
+            </VBox>
+            <VBox fx:id="dealerBox" spacing="5">
+                <Label fx:id="dealerHandValueLabel" text="Dealer Hand Value" styleClass="value-label"/>
+                <HBox fx:id="dealerHand" spacing="5">
+                    <!-- Przykładowe karty dealera -->
+<!--                    <ImageView fx:id="dealerCard1" />-->
+<!--                    <ImageView fx:id="dealerCard2" />-->
+                </HBox>
+            </VBox>
+            <HBox spacing="10">
+                <Button fx:id="hitButton" text="Hit" onAction="#onHit"/>
+                <Button fx:id="standButton" text="Stand" onAction="#onStand"/>
+<!--                <Button fx:id="doubleButton" text="Double" />-->
+<!--                <Button fx:id="splitButton" text="Split"  /> &lt;!&ndash; Disabled by default &ndash;&gt;-->
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="betAmountField" promptText="Enter bet amount"/>
+                <Button fx:id="betButton" text="Bet" onAction="#placeBet"/>
+            </HBox>
+            <Label fx:id="statusLabel" text="Place your bet" styleClass="status-label"/>
+        </VBox>
+    </HBox>
 </AnchorPane>
