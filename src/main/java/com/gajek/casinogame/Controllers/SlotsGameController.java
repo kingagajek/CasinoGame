@@ -48,7 +48,6 @@ public class SlotsGameController {
             stage.setScene(scene);
             stage.show();
 
-            // Ponowne ustawienie mainStage w kontrolerze menu głównego
             MainMenuController controller = loader.getController();
             if (controller instanceof IStageAwareController) {
                 ((IStageAwareController) controller).setMainStage(stage);
@@ -99,10 +98,10 @@ public class SlotsGameController {
                 updatePayoutDisplay(payout);
                 clearMessage();
             } else {
-                showMessage("Niepoprawna kwota zakładu lub niewystarczające środki");
+                showMessage("Incorrect bet amount or insufficient funds.");
             }
         } catch (NumberFormatException e) {
-            showMessage("Niepoprawna kwota zakładu");
+            showMessage("Incorrect bet amount.");
         }
     }
 
@@ -123,7 +122,6 @@ public class SlotsGameController {
         symbolsForReels.add(weightedSymbols); // Bęben 2
         symbolsForReels.add(weightedSymbols);
 
-        // Utworzenie maszyny slotowej z załadowanymi symbolami
         slotMachine = new SlotMachine(symbolsForReels, payoutStrategy);
         updateBalanceDisplay();
     }

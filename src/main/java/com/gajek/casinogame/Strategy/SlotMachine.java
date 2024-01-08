@@ -21,7 +21,7 @@ public class SlotMachine {
         for (Map<Image, Integer> weightedSymbols : weightedSymbolsForReels) {
             reels.add(new Reel(new RandomReelStrategy(weightedSymbols)));
         }
-        this.balance = 1000; // Domyślny początkowy balans
+        this.balance = 1000;
     }
 
     public List<Image> getLastSpinResults() {
@@ -32,8 +32,8 @@ public class SlotMachine {
     public int spinAndCalculatePayout(int betAmount) {
         lastSpinResults = spinReels();
         lastPayout = payoutStrategy.calculatePayout(lastSpinResults, betAmount);
-        balance -= betAmount; // Zakład odejmowany tylko raz
-        balance += lastPayout; // Dodawanie wygranej
+        balance -= betAmount;
+        balance += lastPayout;
         return lastPayout;
     }
 
@@ -50,8 +50,7 @@ public class SlotMachine {
     }
 
     public int calculateMaxBet() {
-        // Logika obliczania maksymalnego zakładu
-        return Math.min(balance, 100); // Przykład
+        return Math.min(balance, 100);
     }
 
 

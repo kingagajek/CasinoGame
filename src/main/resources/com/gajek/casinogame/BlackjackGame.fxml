@@ -11,23 +11,17 @@
 <AnchorPane fx:id="blackjackGamePane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gajek.casinogame.Controllers.BlackjackGameController" stylesheets="@../../../styles/BlackjackGameStyles.css">
     <HBox styleClass="game-background" spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <!-- Główny obszar gry -->
-        <Button fx:id="returnToMenuButton" text="Return to Menu" onAction="#returnToMenu" />
+        <Button fx:id="returnToMenuButton" text="Return" onAction="#returnToMenu" />
         <VBox alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
             <Label fx:id="balanceLabel" text="Balance: 1000" styleClass="balance-label" />
-            <VBox fx:id="playerBox" spacing="5">
-                <Label fx:id="playerHandValueLabel" text="Player Hand Value: 0" styleClass="value-label"/>
-                <HBox fx:id="playerHand" spacing="5">
-                    <!-- Przykładowe karty gracza -->
-<!--                    <ImageView fx:id="playerCard1" />-->
-<!--                    <ImageView fx:id="playerCard2" />-->
-                </HBox>
-            </VBox>
             <VBox fx:id="dealerBox" spacing="5">
                 <Label fx:id="dealerHandValueLabel" text="Dealer Hand Value" styleClass="value-label"/>
                 <HBox fx:id="dealerHand" spacing="5">
-                    <!-- Przykładowe karty dealera -->
-<!--                    <ImageView fx:id="dealerCard1" />-->
-<!--                    <ImageView fx:id="dealerCard2" />-->
+                </HBox>
+            </VBox>
+            <VBox fx:id="playerBox" spacing="5">
+                <Label fx:id="playerHandValueLabel" text="Player Hand Value: 0" styleClass="value-label"/>
+                <HBox fx:id="playerHand" spacing="5">
                 </HBox>
             </VBox>
             <HBox spacing="10">

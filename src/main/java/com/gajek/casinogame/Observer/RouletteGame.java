@@ -12,7 +12,6 @@ import java.util.Map;
 public class RouletteGame extends Subject {
     private List<Observer> observers = new ArrayList<>();
     private double balance;
-    private String currentBetsText;
     private Map<Integer, Double> numberBets;
 
     private double totalBetAmount;
@@ -23,107 +22,84 @@ public class RouletteGame extends Subject {
 
 
     public RouletteGame() {
-        // inicjalizacja zmiennych...
         numberBets = new HashMap<>();
         totalBetAmount = 0;
     }
 
-    public void setBetOnColor (String color, boolean isSet) {
+    public void setBetOnColor(String color, boolean isSet) {
         if ("Red".equals(color)) {
             betOnRed = isSet;
-        }
-        else if ("Black".equals(color)) {
+        } else if ("Black".equals(color)) {
             betOnBlack = isSet;
-        }
-        else if ("Green".equals(color)) {
+        } else if ("Green".equals(color)) {
             betOnGreen = isSet;
         }
     }
-    public boolean getBetOnRed () {
+
+    public boolean getBetOnRed() {
         return betOnRed;
     }
-    public boolean getBetOnBlack () {
+
+    public boolean getBetOnBlack() {
         return betOnBlack;
     }
-    public boolean getBetOnGreen () {
+
+    public boolean getBetOnGreen() {
         return betOnGreen;
     }
 
     public void updateBets(List<Integer> selectedNumbers, double betValue, boolean betOnRed, boolean betOnBlack, boolean betOnGreen) {
-        // Resetuj zakłady
         numberBets.clear();
         totalBetAmount = 0;
         colorBetAmount = 0;
 
-        // Dodaj zakłady na numery
         for (Integer number : selectedNumbers) {
             numberBets.put(number, betValue);
             totalBetAmount += betValue;
         }
 
-        // Dodaj zakłady na kolory
         if (betOnRed || betOnBlack || betOnGreen) {
             colorBetAmount = betValue;
             totalBetAmount += colorBetAmount;
         }
 
-        // Powiadom obserwatorów o zmianie
         notifyObservers();
     }
 
     public void processResult(int number, String color) {
         boolean win = checkWin(number, color);
         double payout = calculatePayout(number, color);
-        setBalance(getBalance() - totalBetAmount + payout); // Załóżmy, że zakłady zostały już odjęte od salda
-        //setCurrentBetsText(getBetDetails(number, color, win, payout));
-       // resetBets(); // Resetuj zakłady na następną grę
-        notifyObservers(); // Powiadom obserwatorów o zmianach
+        setBalance(getBalance() - totalBetAmount + payout);
+        notifyObservers();
     }
 
 
     public boolean checkWin(int number, String color) {
-        // If a number bet was placed and it matches the winning number, it's a win
         if (numberBets.containsKey(number)) {
             return true;
         }
-        // Check color bets
         if ((betOnRed && "Red".equals(color)) ||
                 (betOnBlack && "Black".equals(color)) ||
                 (betOnGreen && "Green".equals(color))) {
             return true;
         }
-        // No bets matched the winning conditions
         return false;
     }
 
-    // This method should calculate the payout based on whether the player won
     public double calculatePayout(int winningNumber, String winningColor) {
         double payout = 0;
-        // If there was a win on a number, pay out for the number
         if (numberBets.containsKey(winningNumber)) {
-            payout += numberBets.get(winningNumber) * 35; // Example payout for numbers
+            payout += numberBets.get(winningNumber) * 35;
         }
         // Check color bets for payout
         if ((betOnRed && "Red".equals(winningColor)) ||
                 (betOnBlack && "Black".equals(winningColor)) ||
                 (betOnGreen && "Green".equals(winningColor))) {
-            payout += colorBetAmount * 2; // Example payout for colors
+            payout += colorBetAmount * 2;
         }
         return payout;
     }
 
-    // This method should return the bet details based on the game's result
-//    public String getBetDetails(int number, String color, boolean win, double payout) {
-//        StringBuilder details = new StringBuilder();
-//        if (win) {
-//            // Append details of winning bets
-//            details.append(String.format("Number %d - %s hit! Payout: %.2f", number, color, payout));
-//        } else {
-//            // Append message for no wins
-//            details.append("No win this time.");
-//        }
-//        return details.toString();
-//    }
     public void resetBets() {
         totalBetAmount = 0;
         numberBets.clear();
@@ -132,22 +108,7 @@ public class RouletteGame extends Subject {
         betOnGreen = false;
         colorBetAmount = 0;
 
-        // Notify observers to update the UI
         notifyObservers();
-    }
-    private void betsChanged() {
-        // Powiadamianie obserwatorów o zmianie zakładów
-        for (Observer observer : observers) {
-            observer.update(this); // Przekazujemy cały obiekt gry do obserwatora
-        }
-    }
-
-    public double getTotalBetAmount() {
-        return totalBetAmount;
-    }
-
-    public double getColorBetAmount() {
-        return colorBetAmount;
     }
 
     public String getColorForNumber(int number) {
@@ -160,37 +121,28 @@ public class RouletteGame extends Subject {
         }
     }
 
-    public Double getBetAmountForNumber(int number) {
-        // Zakładamy, że `numberBets` to mapa przechowująca zakłady na liczby.
-        return numberBets.get(number); // Zwróć kwotę zakładu dla danego numeru lub null, jeśli nie ma zakładu
-    }
-
-
-    public Map<Integer, Double> getNumberBets() {
-        return new HashMap<>(numberBets);
-    }
-    // Metoda wywoływana przez obserwatorów, aby pobrać aktualny tekst zakładów
     public String getCurrentBetsText() {
         StringBuilder betsText = new StringBuilder();
 
         if (betOnRed) {
-            betsText.append(String.format("Czerwony: %.2f| ", colorBetAmount));
+            betsText.append(String.format("Red: %.2f| ", colorBetAmount));
         }
         if (betOnBlack) {
-            betsText.append(String.format("Czarny: %.2f| ", colorBetAmount));
+            betsText.append(String.format("Black: %.2f| ", colorBetAmount));
         }
         if (betOnGreen) {
-            betsText.append(String.format("Zielony: %.2f| ", colorBetAmount));
+            betsText.append(String.format("Green: %.2f| ", colorBetAmount));
         }
 
         for (Map.Entry<Integer, Double> entry : numberBets.entrySet()) {
             int number = entry.getKey();
             double amount = entry.getValue();
-            betsText.append(String.format("Numer %d: %.2f| ", number, amount)); // Formatowanie tekstu zakładu
+            betsText.append(String.format("Number %d: %.2f| ", number, amount));
         }
 
         return betsText.toString();
     }
+
     public double getBalance() {
         return balance;
     }
@@ -199,13 +151,6 @@ public class RouletteGame extends Subject {
         this.balance = balance;
         notifyObservers();
     }
-
-//    public void setCurrentBetsText(String currentBetsText) {
-//        this.currentBetsText = currentBetsText;
-//        notifyObservers();
-//    }
-
-    // Metoda wywoływana, aby powiadomić obserwatorów o zmianie zakładów
 
 
     @Override
@@ -222,10 +167,7 @@ public class RouletteGame extends Subject {
 
     public void notifyObservers() {
         for (Observer observer : observers) {
-            observer.update(this); // przekazujemy 'this' czyli obiekt RouletteGame
+            observer.update(this);
         }
     }
-
-
-    // Metody biznesowe, które zmieniają stan i wywołują notifyObservers...
 }

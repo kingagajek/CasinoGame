@@ -20,6 +20,6 @@
             <Button fx:id="betMaxButton" text="Bet Max" onAction="#betMax" styleClass="bet-button"/>
             <TextField fx:id="betAmount" promptText="Bet Amount" styleClass="bet-text-field"/>
         </HBox>
-        <Button fx:id="returnToMenuButton" text="Return to Menu" onAction="#returnToMenu" styleClass="menu-button"/>
+        <Button fx:id="returnToMenuButton" text="Return" onAction="#returnToMenu" styleClass="menu-button"/>
     </VBox>
 </AnchorPane>

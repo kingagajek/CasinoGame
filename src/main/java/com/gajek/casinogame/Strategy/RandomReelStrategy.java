@@ -32,7 +32,7 @@ public class RandomReelStrategy implements ReelStrategy {
 
         alreadySpunSymbols.clear();
         if (alreadySpunSymbols.contains(chosenSymbol)) {
-            // Dostosuj indeks losowy na podstawie poprzednich losowań
+
             randomIndex = adjustRandomIndexBasedOnPreviousSpins(randomIndex, chosenSymbol, weightedSymbolPool, alreadySpunSymbols);
             chosenSymbol = weightedSymbolPool.get(randomIndex);
         }

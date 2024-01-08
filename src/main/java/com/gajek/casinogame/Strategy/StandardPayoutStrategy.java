@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 
 public class StandardPayoutStrategy implements PayoutStrategy {
     private final Map<String, Integer> basePayoutMap = new HashMap<>();
-    private final double MATCH_THREE_MULTIPLIER = 0.8; // Adjusted for example
-    private final double MATCH_TWO_MULTIPLIER = 0.1; // Adjusted for example
-    private final double MATCH_ONE_MULTIPLIER = 0.0; // No payout for one match
 
     public StandardPayoutStrategy() {
         basePayoutMap.put("seven", 100);

@@ -19,12 +19,10 @@ public class HitCommand implements Command {
     @Override
     public void execute() {
         player.getHand().addCard(deck.dealCard());
-        int handValue = player.getHand().getValue(); // Zakładamy, że metoda getValue() została zaimplementowana poprawnie.
+        int handValue = player.getHand().getValue();
         if (handValue > 21) {
-            //EvaluateResultsState.handle();
             gameContext.changeState(new EvaluateResultsState(gameContext));
             gameContext.proceedToNextState();
         }
-        // Jeśli gracz nie przekroczył 21, gra kontynuuje się.
     }
 }

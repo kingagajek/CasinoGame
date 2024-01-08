@@ -20,6 +20,4 @@ public class Player {
     public void setBalance(int balance) {
         this.balance = balance;
     }
-
-    // Getters, setters, and game actions (bet, hit, stand)...
 }

@@ -11,42 +11,41 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ListView?>
 
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
 <AnchorPane fx:id="rouletteGamePane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gajek.casinogame.Controllers.RouletteGameController" stylesheets="@../../../styles/RouletteGameStyles.css">
     <HBox styleClass="game-background" spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-        <!-- Główny obszar gry -->
-        <!-- Return to Menu Button -->
-        <Button fx:id="returnToMenuButton" text="Return to Menu" onAction="#returnToMenu" />
+        <Button fx:id="returnToMenuButton" text="Return" onAction="#returnToMenu" />
         <VBox alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
+            <GridPane>
             <ImageView fx:id="rouletteWheelImage" fitWidth="400" fitHeight="400" preserveRatio="true">
                 <image>
                     <Image url="@/images/roulette-wheel.png" />
                 </image>
             </ImageView>
-            <Circle fx:id="ball" radius="5" fill="white" layoutX="600" layoutY="300"/>
+                <Circle GridPane.halignment="CENTER" GridPane.valignment="TOP" fx:id="ball" radius="5" fill="white" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <GridPane.margin>
+                        <Insets top="85" right="0" bottom="0" left="0"/>
+                    </GridPane.margin>
+                </Circle>
+            </GridPane>
             <Label fx:id="resultLabel" text="Place your bet" styleClass="result-label"/>
-            <!-- Dodatkowy Label do wyświetlania balansu użytkownika -->
-            <Label fx:id="currentBetsLabel" text="Aktualne zakłady:" styleClass="current-bets-label" />
-
+            <Label fx:id="currentBetsLabel" text="Current bets:" styleClass="current-bets-label" />
             <Label fx:id="balanceLabel" text="Balance: 1000" styleClass="balance-label" />
             <Button fx:id="spinButton" text="Spin" onAction="#spinRoulette" styleClass="spin-button"/>
-            <!-- Przycisk do potwierdzenia zakładów -->
         </VBox>
         <VBox alignment="CENTER" spacing="10" styleClass="bets-section" HBox.hgrow="NEVER">
-            <Label style="-fx-text-fill: white;" text="Wybierz kolor:" />
-            <!-- Przykładowe pola do obstawiania -->
+            <Label style="-fx-text-fill: white;" text="Choose color:" />
             <Button fx:id="betRedButton" text="Red" onAction="#betRed" styleClass="bet-button"/>
             <Button fx:id="betBlackButton" text="Black" onAction="#betBlack" styleClass="bet-button"/>
             <Button fx:id="betGreenButton" text="Green" onAction="#betGreen" styleClass="bet-button"/>
-            <Label style="-fx-text-fill: white;" text="Wybierz numery:" />
-            <!-- Sekcja do obstawiania konkretnych numerów za pomocą ListView -->
+            <Label style="-fx-text-fill: white;" text="Select numbers:" />
             <ListView fx:id="numberSelection" prefHeight="150" prefWidth="250" style="">
-                <!-- Elementy listy będą dodane w kontrolerze -->
             </ListView>
-            <TextField fx:id="betAmount" promptText="Kwota"/>
+            <TextField fx:id="betAmount" promptText="Bet amount"/>
             <HBox alignment="center" spacing="10">
-                <!-- Przycisk do potwierdzenia zakładów -->
-                <Button text="Obstaw" onAction="#confirmBets" HBox.hgrow="NEVER"/>
-                <Button text="Resetuj zakłady" onAction="#resetBets"/>
+                <Button text="Bet" onAction="#confirmBets" HBox.hgrow="NEVER"/>
+                <Button text="Reset bets" onAction="#resetBets"/>
             </HBox>
         </VBox>
     </HBox>

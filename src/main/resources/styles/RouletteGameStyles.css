@@ -111,3 +111,7 @@
 .list-view .scroll-bar .decrement-button {
     -fx-background-color: #3498db;
 }
+
+#ball {
+    -fx-padding-top: 85px;
+}

@@ -12,10 +12,10 @@ public class BetsObserver implements Observer {
     }
 
     @Override
-    public void update(RouletteGame game) { // Aktualizacja parametru wejściowego do RouletteGame
+    public void update(RouletteGame game) {
         Platform.runLater(() -> {
-            String betsText = game.getCurrentBetsText();  // Metoda w modelu zwraca tekst zakładów
-            betsLabel.setText(betsText);  // Aktualizacja UI z nowym tekstem zakładów
+            String betsText = game.getCurrentBetsText();
+            betsLabel.setText(betsText);
         });
     }
 

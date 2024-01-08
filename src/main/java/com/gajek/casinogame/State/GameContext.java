@@ -62,14 +62,10 @@ public class GameContext {
         }
     }
 
-    // Możesz dodać metodę resetującą grę.
     public void resetGame() {
-        // Zresetuj grę do stanu początkowego
         deck.shuffle();
-        player.getHand().clear();  // Załóżmy, że w Hand jest metoda clear(), która czyści rękę gracza
+        player.getHand().clear();
         dealer.getHand().clear();
-        // Możliwe, że będziesz chciał również zresetować inne aspekty stanu gry
     }
 
-    // ... inne metody ...
 }

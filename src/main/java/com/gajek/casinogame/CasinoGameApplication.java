@@ -16,11 +16,8 @@ public class CasinoGameApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(CasinoGameApplication.class.getResource("/com/gajek/casinogame/casinoDashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 800);
 
-        // Uzyskaj kontroler dla casinoDashboard.fxml
         MainMenuController mainMenuController = fxmlLoader.getController();
 
-        // Jeżeli kontroler implementuje interfejs umożliwiający ustawienie stage,
-        // to przekaż do niego aktualny stage.
         if (mainMenuController instanceof IStageAwareController) {
             ((IStageAwareController) mainMenuController).setMainStage(stage);
         }

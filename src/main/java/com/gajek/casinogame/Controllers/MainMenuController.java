@@ -1,14 +1,12 @@
 package com.gajek.casinogame.Controllers;
 
-import com.gajek.casinogame.BlackjackGameFactory;
-import com.gajek.casinogame.IGameFactory;
-import com.gajek.casinogame.RouletteGameFactory;
-import com.gajek.casinogame.SlotsGameFactory;
+import com.gajek.casinogame.Factory.BlackjackGameFactory;
+import com.gajek.casinogame.Factory.IGameFactory;
+import com.gajek.casinogame.Factory.RouletteGameFactory;
+import com.gajek.casinogame.Factory.SlotsGameFactory;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class MainMenuController implements IStageAwareController{
 

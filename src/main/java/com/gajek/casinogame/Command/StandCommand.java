@@ -12,7 +12,6 @@ public class StandCommand implements Command {
 
     @Override
     public void execute() {
-        // Gracz zakończył swoją turę, więc informujemy GameContext, aby zmienił stan na DealerTurnState
         gameContext.changeState(new DealerTurnState(gameContext));
         gameContext.proceedToNextState();
     }

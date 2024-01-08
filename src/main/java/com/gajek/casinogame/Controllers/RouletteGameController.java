@@ -40,11 +40,11 @@ public class RouletteGameController {
     @FXML
     private TextField betAmount;
     @FXML
-    private Label balanceLabel; // Label to display the balance
+    private Label balanceLabel;
     @FXML
-    private Label currentBetsLabel; // Label to display current bets
+    private Label currentBetsLabel;
     @FXML
-    private Label resultLabel; // Label to display current bets
+    private Label resultLabel;
 
     private RouletteGame gameModel = new RouletteGame();
     private BalanceObserver balanceObserver;
@@ -55,14 +55,12 @@ public class RouletteGameController {
             numberSelection.getItems().add(i);
         }
 
-        // Ustaw tryb wielokrotnego wyboru
         numberSelection.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         gameModel.setBalance(1000);
         balanceObserver = new BalanceObserver(balanceLabel);
         gameModel.attach(balanceObserver);
 
-        // Utworzenie obserwatora zakładów i jego dołączenie
         betsObserver = new BetsObserver(currentBetsLabel);
         gameModel.attach(betsObserver);
     }
@@ -77,7 +75,6 @@ public class RouletteGameController {
             stage.setScene(scene);
             stage.show();
 
-            // Ponowne ustawienie mainStage w kontrolerze menu głównego
             MainMenuController controller = loader.getController();
             if (controller instanceof IStageAwareController) {
                 ((IStageAwareController) controller).setMainStage(stage);
@@ -94,14 +91,14 @@ public class RouletteGameController {
         double betValue = 0;
 
         if (betAmount.getText().isEmpty() && !gameModel.getBetOnRed() && !gameModel.getBetOnBlack() && !gameModel.getBetOnGreen()) {
-            resultLabel.setText("Proszę wpisać kwotę zakładu lub wybrać kolor.");
+            resultLabel.setText("Please enter your bet amount or select a color.");
             return;
         }
 
         try {
             betValue = Double.parseDouble(betAmount.getText());
         } catch (NumberFormatException e) {
-            resultLabel.setText("Proszę wpisać poprawną kwotę zakładu.");
+            resultLabel.setText("Please enter the correct bet amount.");
             return;
         }
 
@@ -116,9 +113,8 @@ public class RouletteGameController {
 
     @FXML
     private void spinRoulette() {
-        // Tworzymy ścieżkę animacji wokół koła ruletki
         if (betAmount.getText().isEmpty() && !gameModel.getBetOnRed() && !gameModel.getBetOnBlack() && !gameModel.getBetOnGreen()) {
-            resultLabel.setText("Proszę najpierw postawić zakład.");
+            resultLabel.setText("Please place your bet first.");
             return;
         }
         Path path = new Path();
@@ -126,29 +122,24 @@ public class RouletteGameController {
         moveTo.setX(ball.getCenterX());
         moveTo.setY(ball.getCenterY());
 
-        // Tworzymy łuk, który porusza się wokół koła ruletki
         ArcTo arcTo = new ArcTo();
-        arcTo.setX(ball.getCenterX() - 0.1); // Niewielka zmiana, aby animacja była płynna
+        arcTo.setX(ball.getCenterX() - 0.1);
         arcTo.setY(ball.getCenterY());
-        arcTo.setRadiusX(rouletteWheelImage.getFitWidth() / 2);
-        arcTo.setRadiusY(rouletteWheelImage.getFitHeight() / 2);
+        arcTo.setRadiusX(rouletteWheelImage.getFitWidth() / 2 - 85);
+        arcTo.setRadiusY(rouletteWheelImage.getFitHeight() / 2 - 85);
         arcTo.setSweepFlag(true);
-        arcTo.setLargeArcFlag(true); // Powinno być ustawione na false, jeśli tworzymy łuk mniejszy niż 180 stopni
+        arcTo.setLargeArcFlag(true);
 
-// Dodajemy moveTo i arcTo do ścieżki
         path.getElements().add(moveTo);
         path.getElements().add(arcTo);
 
-        // Stworzenie animacji ścieżki dla kulki
         PathTransition transition = new PathTransition();
         transition.setNode(ball);
         transition.setDuration(Duration.seconds(5));
         transition.setPath(path);
-        transition.setCycleCount(1); // Ustawiamy, aby animacja wykonała się tylko raz
+        transition.setCycleCount(1);
 
-        // Ustawiamy akcję, która zostanie wykonana po zakończeniu animacji
         transition.setOnFinished(event -> {
-            System.out.println("Animacja została zakończona");
             int result = spinWheel();
             displayResult(result);
         });
@@ -157,7 +148,6 @@ public class RouletteGameController {
     }
 
 
-    // Metody wywoływane po naciśnięciu przycisków zakładów
     public void betRed(ActionEvent actionEvent) {
         resultLabel.setText("Bet placed on Red");
         if (gameModel.getBetOnRed()) {
@@ -191,19 +181,16 @@ public class RouletteGameController {
         }
     }
 
-    // Pomocnicza metoda do symulacji obrotu koła ruletki
-    private int spinWheel() {
+        private int spinWheel() {
         Random random = new Random();
         return random.nextInt(37);
     }
 
     private void displayResult(int number) {
-        // Pobierz kolor dla wylosowanego numeru
         StringBuilder details = new StringBuilder();
         String color = gameModel.getColorForNumber(number);
         boolean win = gameModel.checkWin(number, color);
 
-        // Przetwórz wynik w modelu gry, który zaktualizuje stan i powiadomi obserwatorów
         gameModel.processResult(number, color);
         if (win) {
             // Append details of winning bets
@@ -219,8 +206,6 @@ public class RouletteGameController {
         betGreenButton.getStyleClass().remove("active");
     }
 
-
-    // Pomocnicza metoda do resetowania zakładów
     @FXML
     private void resetBets() {
         gameModel.setBetOnColor("Red", false);

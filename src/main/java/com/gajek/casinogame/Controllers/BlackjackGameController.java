@@ -6,7 +6,6 @@ import com.gajek.casinogame.Command.StandCommand;
 import com.gajek.casinogame.Models.Card;
 import com.gajek.casinogame.Models.Deck;
 import com.gajek.casinogame.Models.Player;
-import com.gajek.casinogame.State.EvaluateResultsState;
 import com.gajek.casinogame.State.GameContext;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -28,7 +27,7 @@ public class BlackjackGameController {
     private Button returnToMenuButton;
     private Deck deck;
     private Player player;
-    private Player dealer; // Możesz utworzyć klasę Dealer rozszerzającą Player, jeśli dealer ma unikalne zachowania
+    private Player dealer;
     @FXML
     private Label playerHandValueLabel;
     @FXML
@@ -54,19 +53,15 @@ public class BlackjackGameController {
     @FXML
     public void initialize() {
         deck = new Deck();
-        player = new Player(1000); // Startowy balans może być konfigurowalny
+        player = new Player(1000);
         dealer = new Player(0);
         gameContext = new GameContext(player, dealer, deck);
 
         deck.shuffle();
         updateUI();
 
-        // Ustawienie początkowego stanu gry na tury gracza
-        //gameContext.changeState(new PlayerTurnState(gameContext, player, dealer, deck));
-
         gameContext.setResultHandler(this::updateStatusLabel);
 
-        // Inicjalizacja poleceń
         hitCommand = new HitCommand(player, deck, gameContext);
         standCommand = new StandCommand(gameContext);
     }
@@ -77,9 +72,7 @@ public class BlackjackGameController {
         if (player.getHand().getValue() > 21) {
             disablePlayerActions();
         }
-        //gameContext.setResultHandler(this::updateStatusLabel);
         updateUI();
-        //checkGameOver();
     }
 
     @FXML
@@ -116,14 +109,13 @@ public class BlackjackGameController {
 
     private ImageView createCardView(Card card) {
         ImageView cardView = new ImageView();
-        Image cardImage = new Image(getImagePathForCard(card), 50, 72.6, false, true);
+        Image cardImage = new Image(getImagePathForCard(card), 90, 130.68, false, true);
 
         cardView.setImage(cardImage);
         return cardView;
     }
 
     private String getImagePathForCard(Card card) {
-        // Zwróć prawidłową ścieżkę do obrazu karty
         return "/images/cards/" + card.getRank().toLowerCase() + "_of_" + card.getSuit().toLowerCase() + ".png";
     }
 
@@ -131,15 +123,7 @@ public class BlackjackGameController {
     private void disablePlayerActions() {
         hitButton.setDisable(true);
         standButton.setDisable(true);
-
         showDealerHandValue = true;
-    }
-
-    private void prepareForNewRound() {
-        // Tutaj przygotujesz grę do nowej rundy, jeśli to koniec obecnej rundy
-        gameContext.resetGame();
-        enablePlayerActions();
-        updateUI();
     }
 
     private void enablePlayerActions() {
@@ -162,7 +146,6 @@ public class BlackjackGameController {
         addCardToHand(player.getHand().getCards().get(0), playerHand);
         addCardToHand(player.getHand().getCards().get(1), playerHand);
         addCardToHand(dealer.getHand().getCards().get(0), dealerHand);
-        // Dodaj obrazek rewersu karty jako drugą kartę dealera w UI
         ImageView faceDownCard = new ImageView(new Image("/images/cards/back.png"));
         dealerHand.getChildren().add(faceDownCard);
 
@@ -184,12 +167,10 @@ public class BlackjackGameController {
             dealerHand.getChildren().add(cardView);
         }
 
-        // Zakryj drugą kartę dealera
         if (dealerHand.getChildren().size() > 1 && !showDealerHandValue) {
-            ((ImageView) dealerHand.getChildren().get(1)).setImage(new Image("/images/cards/back.png", 50, 72.6, false, true));
+            ((ImageView) dealerHand.getChildren().get(1)).setImage(new Image("/images/cards/back.png", 90, 130.68, false, true));
         }
 
-        // Aktualizacja wartości ręki gracza i dealera
         int playerHandValue = player.getHand().getValue();
 
         if (showDealerHandValue) {
@@ -198,11 +179,8 @@ public class BlackjackGameController {
         } else {
             dealerHandValueLabel.setText("Dealer Hand Value");
         }
-
-        // Możesz zdecydować, czy chcesz wyświetlić wartość ręki dealera od razu, czy po zakończeniu tury gracza
         playerHandValueLabel.setText("Player Hand Value: " + playerHandValue);
 
-        // Aktualizuj inne elementy UI, np. balans
         balanceLabel.setText("Balance: " + player.getBalance());
     }
 
@@ -217,7 +195,6 @@ public class BlackjackGameController {
             stage.setScene(scene);
             stage.show();
 
-            // Ponowne ustawienie mainStage w kontrolerze menu głównego
             MainMenuController controller = loader.getController();
             if (controller instanceof IStageAwareController) {
                 ((IStageAwareController) controller).setMainStage(stage);

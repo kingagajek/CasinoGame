@@ -1,7 +1,5 @@
 package com.gajek.casinogame.State;
 
-import com.gajek.casinogame.Models.Deck;
-import com.gajek.casinogame.Models.Player;
 import com.gajek.casinogame.Models.Hand;
 
 public class EvaluateResultsState implements GameState {
@@ -17,27 +15,24 @@ public class EvaluateResultsState implements GameState {
     public void handle() {
         int playerScore = gameContext.getPlayer().getHand().getValue();
         int dealerScore = gameContext.getDealer().getHand().getValue();
-        int betAmount = gameContext.getCurrentBet();/* kwota zakładu */; // Kwota zakładu, którą trzeba przechowywać w odpowiednim miejscu
+        int betAmount = gameContext.getCurrentBet();
 
         if (playerScore > 21) {
-            gameContext.notifyResult("Przegrałeś! Przekroczyłeś 21.");
+            gameContext.notifyResult("You lost! You're over 21.");
         } else if (dealerScore > 21 || playerScore > dealerScore) {
-            int payout = betAmount * 2; // standardowa wygrana
+            int payout = betAmount * 2;
             if (isBlackjack(gameContext.getPlayer().getHand())) {
-                payout = (int) (betAmount * 2.5); // 3:2 wypłata dla Blackjacka
+                payout = (int) (betAmount * 2.5);
             }
             gameContext.getPlayer().setBalance(gameContext.getPlayer().getBalance() + payout);
-            gameContext.notifyResult("Wygrałeś! Dealer przekroczył 21 lub masz więcej punktów.");
+            gameContext.notifyResult("You won! The dealer has exceeded 21 or you have more points.");
         } else if (playerScore == dealerScore) {
-            gameContext.getPlayer().setBalance(gameContext.getPlayer().getBalance() + betAmount); // zwrot zakładu
-            gameContext.notifyResult("Remis! Obydwaj macie tę samą liczbę punktów.");
+            gameContext.getPlayer().setBalance(gameContext.getPlayer().getBalance() + betAmount);
+            gameContext.notifyResult("Draw! You both have the same number of points.");
         } else {
-            // w przypadku przegranej nic nie zmienia się (zakład został już odjęty)
-            gameContext.notifyResult("Przegrałeś! Dealer ma więcej punktów.");
+            gameContext.notifyResult("You lost! The dealer has more points.");
         }
         gameContext.resetBet();
-        // Możesz też zdecydować o powrocie do stanu początkowego gry lub rozpoczęciu nowej rundy
-       // gameContext.changeState(new NewRoundState(gameContext));
     }
 
     private boolean isBlackjack(Hand hand) {

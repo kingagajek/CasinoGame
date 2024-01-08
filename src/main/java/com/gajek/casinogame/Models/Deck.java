@@ -21,21 +21,16 @@ public class Deck {
         }
     }
 
-
     public void shuffle() {
-        // Opcjonalnie możesz tutaj ponownie zainicjalizować talię, jeśli jest taka potrzeba
-        initialize();  // Tylko jeśli chcesz ponownie zainicjalizować talię przed każdym przetasowaniem
+        initialize();
         Collections.shuffle(cards);
     }
 
     public Card dealCard() {
         if (cards.isEmpty()) {
-            // Przetosuj używane karty lub zainicjalizuj nową talię
             initialize();
             shuffle();
         }
         return cards.pop();
     }
-
-    // Other methods...
 }

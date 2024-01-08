@@ -14,7 +14,7 @@ public class Hand {
     }
 
     public List<Card> getCards() {
-        return new ArrayList<>(cards); // Zwraca kopię listy, aby uniknąć niezamierzonej modyfikacji
+        return new ArrayList<>(cards);
     }
 
     public int getValue() {
@@ -41,19 +41,15 @@ public class Hand {
             value += cardValue;
         }
 
-        // Ajust for aces
         while (value > 21 && aces > 0) {
-            value -= 10; // Change one ace from 11 to 1
+            value -= 10;
             aces--;
         }
 
         return value;
     }
 
-    // Metoda do czyszczenia ręki
     public void clear() {
         cards.clear();
     }
-
-    // Other methods...
 }
