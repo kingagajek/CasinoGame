@@ -3,9 +3,8 @@ package com.gajek.casinogame.Strategy;
 import javafx.scene.image.Image;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class RandomReelStrategy implements ReelStrategy {
+public class RandomReelStrategy implements IReelStrategy {
     private final List<Image> weightedSymbolPool;
     private final Random randomGenerator = new Random();
     private Set<Image> alreadySpunSymbols = new HashSet<>();

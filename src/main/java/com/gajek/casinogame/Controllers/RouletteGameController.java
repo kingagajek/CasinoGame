@@ -2,7 +2,7 @@ package com.gajek.casinogame.Controllers;
 
 import com.gajek.casinogame.Observer.BalanceObserver;
 import com.gajek.casinogame.Observer.BetsObserver;
-import com.gajek.casinogame.Observer.RouletteGame;
+import com.gajek.casinogame.Models.RouletteGame;
 import javafx.animation.PathTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

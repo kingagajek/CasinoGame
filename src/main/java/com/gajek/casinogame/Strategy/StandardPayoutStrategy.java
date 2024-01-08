@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class StandardPayoutStrategy implements PayoutStrategy {
+public class StandardPayoutStrategy implements IPayoutStrategy {
     private final Map<String, Integer> basePayoutMap = new HashMap<>();
 
     public StandardPayoutStrategy() {

@@ -1,7 +1,7 @@
 package com.gajek.casinogame.Controllers;
 
-import com.gajek.casinogame.Strategy.PayoutStrategy;
-import com.gajek.casinogame.Strategy.SlotMachine;
+import com.gajek.casinogame.Strategy.IPayoutStrategy;
+import com.gajek.casinogame.Models.SlotMachine;
 import com.gajek.casinogame.Strategy.StandardPayoutStrategy;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +34,7 @@ public class SlotsGameController {
     private Label payoutLabel;
     @FXML
     private Label messageLabel;
-    private PayoutStrategy payoutStrategy = new StandardPayoutStrategy();
+    private IPayoutStrategy IPayoutStrategy = new StandardPayoutStrategy();
     private int bet;
     private SlotMachine slotMachine;
 
@@ -122,7 +122,7 @@ public class SlotsGameController {
         symbolsForReels.add(weightedSymbols); // Bęben 2
         symbolsForReels.add(weightedSymbols);
 
-        slotMachine = new SlotMachine(symbolsForReels, payoutStrategy);
+        slotMachine = new SlotMachine(symbolsForReels, IPayoutStrategy);
         updateBalanceDisplay();
     }
 }

@@ -1,10 +1,10 @@
 package com.gajek.casinogame.Observer;
 
+import com.gajek.casinogame.Models.RouletteGame;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.scene.control.Label;
 
-public class BetsObserver implements Observer {
+public class BetsObserver implements IObserver {
     private Label betsLabel;
 
     public BetsObserver(Label betsLabel) {

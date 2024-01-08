@@ -6,7 +6,7 @@ import com.gajek.casinogame.Models.Player;
 import java.util.function.Consumer;
 
 public class GameContext {
-    private GameState currentState;
+    private IGameState currentState;
     private Player player;
     private Player dealer;
     private Deck deck;
@@ -30,7 +30,7 @@ public class GameContext {
         this.currentBet = 0;
     }
 
-    public void changeState(GameState newState) {
+    public void changeState(IGameState newState) {
         this.currentState = newState;
     }
 

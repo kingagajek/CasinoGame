@@ -1,9 +1,10 @@
 package com.gajek.casinogame.Observer;
 
+import com.gajek.casinogame.Models.RouletteGame;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class BalanceObserver implements Observer {
+public class BalanceObserver implements IObserver {
     private Label balanceLabel;
 
     public BalanceObserver(Label balanceLabel) {

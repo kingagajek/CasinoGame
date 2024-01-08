@@ -2,9 +2,8 @@ package com.gajek.casinogame.State;
 
 import com.gajek.casinogame.Models.Hand;
 
-public class EvaluateResultsState implements GameState {
+public class EvaluateResultsState implements IGameState {
     private GameContext gameContext;
-
 
 
     public EvaluateResultsState(GameContext gameContext) {

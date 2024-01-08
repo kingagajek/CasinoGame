@@ -2,7 +2,6 @@ package com.gajek.casinogame.Strategy;
 
 import javafx.scene.image.Image;
 
-
-public interface ReelStrategy {
+public interface IReelStrategy {
     Image spin();
 }

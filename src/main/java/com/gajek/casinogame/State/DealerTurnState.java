@@ -1,6 +1,6 @@
 package com.gajek.casinogame.State;
 
-public class DealerTurnState implements GameState {
+public class DealerTurnState implements IGameState {
     private GameContext gameContext;
 
     public DealerTurnState(GameContext gameContext) {

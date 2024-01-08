@@ -1,5 +1,5 @@
 package com.gajek.casinogame.State;
 
-public interface GameState {
+public interface IGameState {
     void handle();
 }

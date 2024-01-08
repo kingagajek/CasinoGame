@@ -1,8 +1,7 @@
-package com.gajek.casinogame.Observer;
+package com.gajek.casinogame.Models;
 
-import com.gajek.casinogame.Controllers.RouletteGameController;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import com.gajek.casinogame.Observer.IObserver;
+import com.gajek.casinogame.Observer.Subject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RouletteGame extends Subject {
-    private List<Observer> observers = new ArrayList<>();
+    private List<IObserver> IObservers = new ArrayList<>();
     private double balance;
     private Map<Integer, Double> numberBets;
 
@@ -154,20 +153,20 @@ public class RouletteGame extends Subject {
 
 
     @Override
-    public void attach(Observer o) {
-        if (!observers.contains(o)) {
-            observers.add(o);
+    public void attach(IObserver o) {
+        if (!IObservers.contains(o)) {
+            IObservers.add(o);
         }
     }
 
     @Override
-    public void detach(Observer o) {
-        observers.remove(o);
+    public void detach(IObserver o) {
+        IObservers.remove(o);
     }
 
     public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update(this);
+        for (IObserver IObserver : IObservers) {
+            IObserver.update(this);
         }
     }
 }

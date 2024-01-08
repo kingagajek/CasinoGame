@@ -1,5 +1,8 @@
-package com.gajek.casinogame.Strategy;
+package com.gajek.casinogame.Models;
 
+import com.gajek.casinogame.Strategy.IPayoutStrategy;
+import com.gajek.casinogame.Strategy.RandomReelStrategy;
+import com.gajek.casinogame.Strategy.Reel;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -8,15 +11,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SlotMachine {
-    private final PayoutStrategy payoutStrategy;
+    private final IPayoutStrategy IPayoutStrategy;
     private List<Reel> reels;
     private int balance;
     private int lastPayout;
     private List<Image> lastSpinResults;
 
 
-    public SlotMachine(List<Map<Image, Integer>> weightedSymbolsForReels, PayoutStrategy payoutStrategy) {
-        this.payoutStrategy = payoutStrategy;
+    public SlotMachine(List<Map<Image, Integer>> weightedSymbolsForReels, IPayoutStrategy IPayoutStrategy) {
+        this.IPayoutStrategy = IPayoutStrategy;
         this.reels = new ArrayList<>();
         for (Map<Image, Integer> weightedSymbols : weightedSymbolsForReels) {
             reels.add(new Reel(new RandomReelStrategy(weightedSymbols)));
@@ -31,7 +34,7 @@ public class SlotMachine {
 
     public int spinAndCalculatePayout(int betAmount) {
         lastSpinResults = spinReels();
-        lastPayout = payoutStrategy.calculatePayout(lastSpinResults, betAmount);
+        lastPayout = IPayoutStrategy.calculatePayout(lastSpinResults, betAmount);
         balance -= betAmount;
         balance += lastPayout;
         return lastPayout;
